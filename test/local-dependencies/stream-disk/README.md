@@ -2,7 +2,7 @@
 
 Reference implementation in C. Tests that a compatible camera is connected, stream 10 seconds of video (image frames), and saves them to a file on disk.
 
-This is the [`libuvc` documentation example](https://ken.tossell.net/libuvc/doc/) by [Ken Tossell](https://ken.tossell.net/), but it saves the video to disk.
+This is the [`libuvc` documentation example](https://ken.tossell.net/libuvc/doc/) by [Ken Tossell](https://ken.tossell.net/), but it saves the video to disk. It uses the locally built dependencies used by this package.
 
 # Requirements
 
@@ -16,8 +16,14 @@ This is the [`libuvc` documentation example](https://ken.tossell.net/libuvc/doc/
 
 # Building
 
+Build the package dependencies in the root.
+
 ```shell
-clang stream-disk.c -luvc -o stream-disk
+npm run --silent build
+```
+
+```shell
+clang -o stream-disk stream-disk.c -I"${PWD}/../../../dependencies/build/libuvc/include" -I"${PWD}/../../../dependencies/build/libusb/include" -L"${PWD}/../../../dependencies/build/libuvc/lib" -luvc -L"${PWD}/../../../dependencies/build/libusb/lib" -lusb-1.0 -ludev -pthread
 ```
 
 # Usage
@@ -25,7 +31,7 @@ clang stream-disk.c -luvc -o stream-disk
 See the terminal for some debugging output, and the output file `stream-disk.mjpeg`.
 
 ```shell
-./stream-disk
+LD_LIBRARY_PATH="${PWD}/../../../dependencies/build/libuvc/lib" ./stream-disk
 ```
 
 # Output
