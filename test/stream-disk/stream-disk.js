@@ -58,6 +58,11 @@ const sleep = async s =>
 async function /* void */ cb(/* uvc_frame_t * */ frame, /* void * */ ptr) {
   const fileWriteStream = ref.readObject(ptr, 0);
   const frameDeref = frame.deref();
+
+  if (frameDeref.sequence % 30 == 0) {
+    console.log(` * got image ${frameDeref.sequence}`);
+  }
+
   const mjpeg = ref.reinterpret(frameDeref.data, frameDeref.data_bytes, 0);
 
   if (!fileWriteStream.write(mjpeg)) {
@@ -74,15 +79,18 @@ async function /* int */ main(/* int */ argc, /* char ** */ argv) {
     );
   const /* uvc_stream_ctrl_t */ ctrl = ref.alloc(libuvc.uvc_stream_ctrl_t);
   let /* uvc_error_t */ res;
+
   /* Initialize a UVC service context. Libuvc will set up its own libusb
    * context. Replace NULL with a libusb_context pointer to run libuvc
    * from an existing libusb context. */
   res = libuvc.libuvc.uvc_init(/* & */ ctx, null);
+
   if (res < 0) {
     libuvc.libuvc.uvc_perror(res, "uvc_init");
     return res;
   }
   console.log("UVC initialized");
+
   /* Locates the first attached UVC device, stores in dev */
   res = libuvc.libuvc.uvc_find_device(
     ctx.deref(),
@@ -91,19 +99,24 @@ async function /* int */ main(/* int */ argc, /* char ** */ argv) {
     0,
     null
   ); /* filter devices: vendor_id, product_id, "serial_num" */
+
   if (res < 0) {
     libuvc.libuvc.uvc_perror(res, "uvc_find_device"); /* no devices found */
   } else {
     console.log("Device found");
+
     /* Try to open the device: requires exclusive access */
     res = libuvc.libuvc.uvc_open(dev.deref(), /* & */ devh);
+
     if (res < 0) {
       libuvc.libuvc.uvc_perror(res, "uvc_open"); /* unable to open device */
     } else {
       console.log("Device opened");
+
       /* Print out a message containing all the information that libuvc
        * knows about the device */
       libuvc.libuvc.uvc_print_diag(devh.deref(), null);
+
       /* Try to negotiate a 640x480 30 fps YUYV stream profile */
       res = libuvc.libuvc.uvc_get_stream_ctrl_format_size(
         devh.deref(),
@@ -114,8 +127,10 @@ async function /* int */ main(/* int */ argc, /* char ** */ argv) {
         480,
         30 /* width, height, fps */
       );
+
       /* Print out the result */
       libuvc.libuvc.uvc_print_stream_ctrl(/* & */ ctrl, null);
+
       if (res < 0) {
         libuvc.libuvc.uvc_perror(
           res,
@@ -139,6 +154,7 @@ async function /* int */ main(/* int */ argc, /* char ** */ argv) {
           user_ptr,
           0
         );
+
         if (res < 0) {
           fileWriteStream.end();
           await finished(fileWriteStream);
@@ -148,29 +164,67 @@ async function /* int */ main(/* int */ argc, /* char ** */ argv) {
           ); /* unable to start stream */
         } else {
           console.log("Streaming...");
-          libuvc.libuvc.uvc_set_ae_mode(
+
+          /* enable auto exposure - see uvc_set_ae_mode documentation */
+          console.log("Enabling auto exposure ...");
+          const /* uint8_t */ UVC_AUTO_EXPOSURE_MODE_AUTO = 2;
+          res = libuvc.libuvc.uvc_set_ae_mode(
             devh.deref(),
-            1
-          ); /* e.g., turn on auto exposure */
+            UVC_AUTO_EXPOSURE_MODE_AUTO
+          );
+          if (res == libuvc.CONSTANTS.uvc_error.UVC_SUCCESS) {
+            console.log(" ... enabled auto exposure");
+          } else if (res == libuvc.CONSTANTS.uvc_error.UVC_ERROR_PIPE) {
+            /* this error indicates that the camera does not support the full AE mode;
+             * try again, using aperture priority mode (fixed aperture, variable exposure time) */
+            console.log(
+              " ... full AE not supported, trying aperture priority mode"
+            );
+            const /* uint8_t */ UVC_AUTO_EXPOSURE_MODE_APERTURE_PRIORITY = 8;
+            res = libuvc.libuvc.uvc_set_ae_mode(
+              devh.deref(),
+              UVC_AUTO_EXPOSURE_MODE_APERTURE_PRIORITY
+            );
+            if (res < 0) {
+              libuvc.libuvc.uvc_perror(
+                res,
+                " ... uvc_set_ae_mode failed to enable aperture priority mode"
+              );
+            } else {
+              console.log(" ... enabled aperture priority auto exposure mode");
+            }
+          } else {
+            libuvc.libuvc.uvc_perror(
+              res,
+              " ... uvc_set_ae_mode failed to enable auto exposure mode"
+            );
+          }
+
           await sleep(10); /* stream for 10 seconds */
+
           fileWriteStream.end();
           await finished(fileWriteStream);
+
           /* End the stream. Blocks until last callback is serviced */
           libuvc.libuvc.uvc_stop_streaming(devh.deref());
           console.log("Done streaming.");
         }
       }
+
       /* Release our handle on the device */
       libuvc.libuvc.uvc_close(devh.deref());
       console.log("Device closed");
     }
+
     /* Release the device descriptor */
     libuvc.libuvc.uvc_unref_device(dev.deref());
   }
+
   /* Close the UVC context. This closes and cleans up any existing device handles,
    * and it closes the libusb context if one was not provided. */
   libuvc.libuvc.uvc_exit(ctx.deref());
   console.log("UVC exited");
+
   return 0;
 }
 
