@@ -47,8 +47,8 @@ const libuvc = require("../../");
 const finished = util.promisify(stream.finished);
 const voidPtr = ref.refType(ref.types.void);
 
-const sleep = async s =>
-  new Promise(resolve => {
+const sleep = async (s) =>
+  new Promise((resolve) => {
     setTimeout(resolve, s * 1000);
   });
 
