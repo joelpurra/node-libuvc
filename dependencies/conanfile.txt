@@ -1,9 +1,9 @@
 [requires]
-libuvc/0.0.6@bincrafters/stable
+libuvc/0.0.6@
 
 [generators]
 cmake
 deploy
 
 [options]
-libuvc:shared=True
+*:shared=True
