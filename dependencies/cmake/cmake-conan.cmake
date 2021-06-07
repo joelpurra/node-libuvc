@@ -7,7 +7,7 @@ if(NOT EXISTS "${CONAN_CMAKE}")
     message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
     file(
         # TODO: update version when available.
-        DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.15/conan.cmake"
+        DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.16.1/conan.cmake"
         "${CONAN_CMAKE}"
     )
 endif()
