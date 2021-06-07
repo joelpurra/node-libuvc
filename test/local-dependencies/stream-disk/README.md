@@ -23,7 +23,7 @@ npm run --silent build
 ```
 
 ```shell
-clang -o stream-disk stream-disk.c -I"${PWD}/../../../dependencies/build/libuvc/include" -I"${PWD}/../../../dependencies/build/libusb/include" -L"${PWD}/../../../dependencies/build/libuvc/lib" -luvc -L"${PWD}/../../../dependencies/build/libusb/lib" -lusb-1.0 -ludev -pthread
+clang -o stream-disk stream-disk.c -I"${PWD}/../../../dependencies/build/libuvc/include" -I"${PWD}/../../../dependencies/build/libusb/include" -I"${PWD}/../../../dependencies/build/libjpeg/include" -L"${PWD}/../../../dependencies/build/libuvc/lib" -L"${PWD}/../../../dependencies/build/libusb/lib" -L"${PWD}/../../../dependencies/build/libjpeg/lib" -luvc -lusb-1.0 -ljpeg -ludev -pthread
 ```
 
 # Usage
@@ -31,7 +31,7 @@ clang -o stream-disk stream-disk.c -I"${PWD}/../../../dependencies/build/libuvc/
 See the terminal for some debugging output, and the output file `stream-disk.mjpeg`.
 
 ```shell
-LD_LIBRARY_PATH="${PWD}/../../../dependencies/build/libuvc/lib" ./stream-disk
+LD_LIBRARY_PATH="${PWD}/../../../dependencies/build/libuvc/lib:${PWD}/../../../dependencies/build/libjpeg/lib" ./stream-disk
 ```
 
 # Output
