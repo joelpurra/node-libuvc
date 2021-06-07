@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "cmake-js": "^6.1.0",
-    "ffi-generate": "github:node-ffi-packager/node-ffi-generate#ffi-napi",
+    "@ffi-packager/ffi-generate": "github:node-ffi-packager/node-ffi-generate#semver:^v2.0.2",
     "husky": "^4.3.8",
     "prettier": "^2.3.1",
     "rimraf": "^3.0.2"
