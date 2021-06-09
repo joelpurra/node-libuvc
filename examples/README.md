@@ -1,10 +1,14 @@
-# `node-libuvc` tests
+# `node-libuvc` examples
 
-Tests are mainly written in javascript. There are also reference implementations in C/C++ to ensure the underlying libraries, such as `libuvc`, work.
+Examples are mainly written in javascript. There are also reference implementations in C/C++ to ensure the underlying libraries, such as `libuvc`, work.
 
 ## File formats
 
-Some tests output files in various formats.
+Some examples output files in various formats.
+
+### Additional requirements
+
+- [`ffmpeg`](https://ffmpeg.org/) to convert from [Motion JPEG](https://en.wikipedia.org/wiki/Motion_JPEG) to a different format.
 
 ### Motion JPEG
 
@@ -25,3 +29,7 @@ Use the below command to create `stream-disk.mp4`.
 ```shell
 ffmpeg -f mjpeg -framerate 30 -i stream-disk.mjpeg stream-disk.mp4
 ```
+
+---
+
+[`node-libuvc`](https://joelpurra.com/projects/node-libuvc/) Copyright &copy; 2020, 2021 [Joel Purra](https://joelpurra.com/). Released under [GNU Lesser General Public License version 3.0 (LGPL-3.0)](https://www.gnu.org/licenses/lgpl.html). [Your donations are appreciated!](https://joelpurra.com/donate/)

@@ -1,14 +1,13 @@
 # Stream webcam video and display them on screen
 
-Reference implementation in C/C++. Tests that a compatible camera is connected, stream 10 seconds of video (image frames), and displays them in a window on the screen.
+Reference implementation in C/C++. Tests that a compatible camera is connected, streams 10 seconds of video (image frames), and displays them in a window on the screen.
 
-This is the [`libuvc` documentation example](https://ken.tossell.net/libuvc/doc/) by [Ken Tossell](https://ken.tossell.net/), with the on-screen display enabled. It uses the locally built dependencies used by this package, but builds them in this directory.
+This is the [`libuvc` documentation example](https://ken.tossell.net/libuvc/doc/), with the on-screen display enabled. It uses the locally built dependencies used by this package, but builds them in this directory.
 
-# Requirements
+# Additional requirements
 
 - Libraries:
   - [`opencv`](https://opencv.org/) for displaying the stream of images.
-- A supported, and connected, UVC camera.
 
 # Building
 
@@ -25,3 +24,7 @@ See the terminal for some debugging output, and the newly opened window for 10 s
 ```shell
 ./build/stream-display
 ```
+
+---
+
+[`node-libuvc`](https://joelpurra.com/projects/node-libuvc/) Copyright &copy; 2020, 2021 [Joel Purra](https://joelpurra.com/). Released under [GNU Lesser General Public License version 3.0 (LGPL-3.0)](https://www.gnu.org/licenses/lgpl.html). [Your donations are appreciated!](https://joelpurra.com/donate/)
