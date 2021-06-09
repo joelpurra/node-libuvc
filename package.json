@@ -1,6 +1,6 @@
 {
   "name": "libuvc",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Low-level library for USB Video Class (UVC) devices, wrapping the cross-platform libuvc C library. Used to write software for webcams, camcorders, etcetera.",
   "homepage": "https://joelpurra.com/projects/node-libuvc/",
   "main": "index.js",
