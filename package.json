@@ -11,7 +11,7 @@
     "build:compile": "cmake-js compile --prefer-clang --directory ./dependencies/",
     "build:generate": "npm run --silent build:generate:ffi && npm run --silent build:generate:patch",
     "build:generate:ffi": "C_INCLUDE_PATH='./dependencies/build/libuvc/include' ffi-generate --prefix 'uvc' --file ./dependencies/build/libuvc/include/libuvc/libuvc.h --library libuvc > ./lib/libuvc.js",
-    "build:generate:patch": "sed --in-place -e 's_\"libuvc\"_require(\"./get-libuvc-path\")()_' ./lib/libuvc.js",
+    "build:generate:patch": "sed --in-place -e 's_\"libuvc\"_null_' ./lib/libuvc.js",
     "rebuild": "npm run --silent clean && npm run --silent build",
     "test": "npm run --silent lint:fast",
     "lint": "npm run --silent lint:full",
