@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( stream-display )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( stream-display stream-display.cpp )
+target_link_libraries( stream-display ${OpenCV_LIBS} uvc )
